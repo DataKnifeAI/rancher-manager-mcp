@@ -29,3 +29,5 @@ coverage.html
 .env.local
 *.token
 secrets/
+# But track the example file
+!.env.example
