@@ -20,7 +20,11 @@ echo "URL: $RANCHER_URL"
 echo "Token: ${TOKEN:0:20}..."
 
 # Test the token by making a request to the users endpoint
-response=$(curl -s -w "\n%{http_code}" \
+# Use -k to skip SSL verification (useful for self-signed certs)
+# Use -L to follow redirects
+# Ensure URL doesn't have double slashes
+RANCHER_URL=$(echo "$RANCHER_URL" | sed 's|/$||')
+response=$(curl -k -L -s -w "\n%{http_code}" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
