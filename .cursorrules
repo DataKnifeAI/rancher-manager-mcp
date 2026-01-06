@@ -1,0 +1,20 @@
+# Rancher Manager MCP Server
+
+This is a Model Context Protocol (MCP) server for Rancher Manager API with stdio and HTTP transport support.
+
+## Key Files
+- `cmd/main.go` - Main entry point for the MCP server
+- `internal/server/server.go` - Server implementation and tool registration
+- `internal/server/rancher_client.go` - Rancher API client
+- `internal/mcp/server.go` - MCP protocol implementation
+
+## Development
+- Use environment variables for tokens (see `.env.example`)
+- Never commit tokens or secrets to git
+- The server supports both stdio (default) and HTTP transports
+- Tools are registered in `registerTools()` method
+
+## API
+- Uses Rancher Manager Kubernetes API: `/apis/management.cattle.io/v3/`
+- Authentication via Bearer token in Authorization header
+- Reference: https://ranchermanager.docs.rancher.com/api/api-reference

@@ -1,84 +1,45 @@
 # Rancher Manager MCP Server
 
-A Model Context Protocol (MCP) server for interacting with Rancher Manager API. Supports both stdio and HTTP transports.
+MCP server for Rancher Manager API with stdio and HTTP transport support.
 
-## Features
-
-- **Dual Transport Support**: Works with both stdio (for CLI tools) and HTTP (for web services)
-- **Rancher API Integration**: Full integration with Rancher Manager Kubernetes API
-- **Tool-based Interface**: Exposes Rancher operations as MCP tools
-
-## Installation
+## Setup
 
 ```bash
+# Copy example env file
+cp .env.example .env
+# Edit .env with your Rancher URL and token
+
+# Build
 go build -o rancher-mcp ./cmd
 ```
 
 ## Usage
 
-### Stdio Transport (Default)
+The server reads credentials from environment variables or command-line flags:
 
 ```bash
-./rancher-mcp \
-  --transport stdio \
-  --rancher-url https://your-rancher-server \
-  --rancher-token YOUR_TOKEN_HERE
-```
-
-### HTTP Transport
-
-```bash
-./rancher-mcp \
-  --transport http \
-  --http-addr :8080 \
-  --rancher-url https://your-rancher-server \
-  --rancher-token YOUR_TOKEN_HERE
-```
-
-### Verify Token
-
-**⚠️ SECURITY**: Never commit tokens to git! Use environment variables.
-
-```bash
-# Using the Go tool
-go run ./cmd/verify-token/main.go \
-  --rancher-url https://your-rancher-server \
-  --rancher-token YOUR_TOKEN_HERE
-
-# Or using the shell script (recommended - uses env vars)
+# Using environment variables (recommended)
 export RANCHER_URL=https://your-rancher-server
-export RANCHER_TOKEN=your-token-here
-./test_token.sh
-```
+export RANCHER_TOKEN=your-token
+./rancher-mcp
 
-See [VERIFY_TOKEN.md](VERIFY_TOKEN.md) for more details.
+# Or via command-line flags
+./rancher-mcp --rancher-url https://your-rancher-server --rancher-token your-token
+
+# HTTP transport
+./rancher-mcp --transport http --http-addr :8080
+```
 
 ## Available Tools
 
 - `list_clusters` - List all Rancher clusters
-- `get_cluster` - Get details of a specific cluster (requires `name` parameter)
+- `get_cluster` - Get cluster details (requires `name`)
 - `list_users` - List all Rancher users
-- `get_user` - Get details of a specific user (requires `name` parameter)
+- `get_user` - Get user details (requires `name`)
 - `list_projects` - List all Rancher projects
-- `get_project` - Get details of a specific project (requires `name` parameter, optional `namespace`)
+- `get_project` - Get project details (requires `name`, optional `namespace`)
 
 ## API Reference
 
-This server uses the Rancher Manager Kubernetes API. See the [official API documentation](https://ranchermanager.docs.rancher.com/api/api-reference) for more details.
-
-## Development
-
-```bash
-# Run tests
-go test ./...
-
-# Build
-go build -o rancher-mcp ./cmd
-
-# Run with debug logging
-./rancher-mcp --log-level debug --transport stdio --rancher-url <url> --rancher-token <token>
-```
-
-## License
-
-MIT
+Uses Rancher Manager Kubernetes API: `/apis/management.cattle.io/v3/`
+See: https://ranchermanager.docs.rancher.com/api/api-reference

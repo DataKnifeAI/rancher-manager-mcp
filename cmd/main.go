@@ -23,6 +23,14 @@ func main() {
 	)
 	flag.Parse()
 
+	// Read from environment variables if not provided via flags
+	if *rancherURL == "" {
+		*rancherURL = os.Getenv("RANCHER_URL")
+	}
+	if *rancherToken == "" {
+		*rancherToken = os.Getenv("RANCHER_TOKEN")
+	}
+
 	// Set log level
 	level, err := logrus.ParseLevel(*logLevel)
 	if err != nil {
