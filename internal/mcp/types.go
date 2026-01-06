@@ -10,7 +10,7 @@ type JSONRPCRequest struct {
 
 type JSONRPCResponse struct {
 	JSONRPC string      `json:"jsonrpc"`
-	ID      interface{} `json:"id,omitempty"`
+	ID      interface{} `json:"id"` // Required for responses (not omitempty)
 	Result  interface{} `json:"result,omitempty"`
 	Error   *JSONRPCError `json:"error,omitempty"`
 }

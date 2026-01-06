@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"io"
 	"sync"
-
-	"github.com/sirupsen/logrus"
 )
 
 type ToolHandler func(ctx context.Context, args map[string]interface{}) (interface{}, error)
@@ -51,6 +49,7 @@ func (s *Server) HandleRequest(ctx context.Context, req *JSONRPCRequest) *JSONRP
 func (s *Server) Serve(ctx context.Context, stdin io.Reader, stdout io.Writer) error {
 	decoder := json.NewDecoder(stdin)
 	encoder := json.NewEncoder(stdout)
+	encoder.SetEscapeHTML(false)
 
 	for {
 		select {
@@ -62,13 +61,33 @@ func (s *Server) Serve(ctx context.Context, stdin io.Reader, stdout io.Writer) e
 				if err == io.EOF {
 					return nil
 				}
-				logrus.Errorf("Failed to decode request: %v", err)
+				// Send error response for malformed requests
+				if req.ID != nil {
+					errorResp := &JSONRPCResponse{
+						JSONRPC: "2.0",
+						ID:      req.ID,
+						Error: &JSONRPCError{
+							Code:    -32700,
+							Message: "Parse error",
+						},
+					}
+					encoder.Encode(errorResp)
+				}
+				continue
+			}
+
+			// Skip notifications (requests without ID)
+			if req.ID == nil {
 				continue
 			}
 
 			resp := s.handleRequest(ctx, &req)
+			// Ensure ID is always set in response
+			if resp.ID == nil {
+				resp.ID = req.ID
+			}
 			if err := encoder.Encode(resp); err != nil {
-				logrus.Errorf("Failed to encode response: %v", err)
+				// Can't log to stderr in stdio mode, just continue
 				continue
 			}
 		}
@@ -76,17 +95,30 @@ func (s *Server) Serve(ctx context.Context, stdin io.Reader, stdout io.Writer) e
 }
 
 func (s *Server) handleRequest(ctx context.Context, req *JSONRPCRequest) *JSONRPCResponse {
+	// Ensure ID is always preserved
+	responseID := req.ID
+	if responseID == nil {
+		// Use null for notifications (though we shouldn't get here)
+		responseID = nil
+	}
+
 	switch req.Method {
 	case "initialize":
-		return s.handleInitialize(req)
+		resp := s.handleInitialize(req)
+		resp.ID = responseID
+		return resp
 	case "tools/list":
-		return s.handleToolsList(req)
+		resp := s.handleToolsList(req)
+		resp.ID = responseID
+		return resp
 	case "tools/call":
-		return s.handleToolsCall(ctx, req)
+		resp := s.handleToolsCall(ctx, req)
+		resp.ID = responseID
+		return resp
 	default:
 		return &JSONRPCResponse{
 			JSONRPC: "2.0",
-			ID:      req.ID,
+			ID:      responseID,
 			Error: &JSONRPCError{
 				Code:    -32601,
 				Message: fmt.Sprintf("Method not found: %s", req.Method),
