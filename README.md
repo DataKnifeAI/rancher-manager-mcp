@@ -22,7 +22,7 @@ go build -o rancher-mcp ./cmd
 ./rancher-mcp \
   --transport stdio \
   --rancher-url https://your-rancher-server \
-  --rancher-token token-lk4pv:your-token
+  --rancher-token YOUR_TOKEN_HERE
 ```
 
 ### HTTP Transport
@@ -32,10 +32,12 @@ go build -o rancher-mcp ./cmd
   --transport http \
   --http-addr :8080 \
   --rancher-url https://your-rancher-server \
-  --rancher-token token-lk4pv:your-token
+  --rancher-token YOUR_TOKEN_HERE
 ```
 
 ### Verify Token
+
+**⚠️ SECURITY**: Never commit tokens to git! Use environment variables.
 
 ```bash
 # Using the Go tool
@@ -43,8 +45,9 @@ go run ./cmd/verify-token/main.go \
   --rancher-url https://your-rancher-server \
   --rancher-token YOUR_TOKEN_HERE
 
-# Or using the shell script
+# Or using the shell script (recommended - uses env vars)
 export RANCHER_URL=https://your-rancher-server
+export RANCHER_TOKEN=your-token-here
 ./test_token.sh
 ```
 

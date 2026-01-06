@@ -1,7 +1,16 @@
 #!/bin/bash
 # Test script to verify Rancher API token
+# 
+# SECURITY: Never commit tokens to git! Use environment variables.
+# Usage: RANCHER_URL=https://your-server RANCHER_TOKEN=your-token ./test_token.sh
 
-TOKEN="${RANCHER_TOKEN}"
+TOKEN="${RANCHER_TOKEN:-}"
+
+if [ -z "$TOKEN" ]; then
+  echo "Error: RANCHER_TOKEN environment variable is required"
+  echo "Usage: RANCHER_URL=https://your-server RANCHER_TOKEN=your-token ./test_token.sh"
+  exit 1
+fi
 
 # You'll need to set your Rancher URL
 RANCHER_URL="${RANCHER_URL:-https://your-rancher-server}"

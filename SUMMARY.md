@@ -24,19 +24,20 @@
 
 ## 📋 Token Information
 
-**Token**: `YOUR_TOKEN_HERE`
+**⚠️ SECURITY WARNING**: Never commit API tokens to git repositories!
 
 **To Verify**:
 ```bash
-# Set your Rancher URL
+# Set your Rancher URL and token as environment variables
 export RANCHER_URL=https://your-rancher-server
+export RANCHER_TOKEN=your-token-here
 
 # Option 1: Use Go tool
 go run ./cmd/verify-token/main.go \
   --rancher-url $RANCHER_URL \
-  --rancher-token YOUR_TOKEN_HERE
+  --rancher-token $RANCHER_TOKEN
 
-# Option 2: Use shell script
+# Option 2: Use shell script (reads from env vars)
 ./test_token.sh
 ```
 
