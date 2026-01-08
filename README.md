@@ -215,6 +215,47 @@ This server uses the Rancher Manager Kubernetes API:
 - **Authentication**: Bearer token in `Authorization` header
 - **Documentation**: https://ranchermanager.docs.rancher.com/api/api-reference
 
+## Docker Support
+
+### Build Docker Image
+```bash
+docker build -t rancher-mcp:latest .
+```
+
+### Run with Docker (stdio mode)
+```bash
+docker run --rm -i \
+  -e RANCHER_URL=https://your-rancher-server \
+  -e RANCHER_TOKEN=token-XXXXX:YYYYY \
+  rancher-mcp:latest \
+  --transport stdio
+```
+
+### Run with Docker (HTTP mode)
+```bash
+docker run --rm -d \
+  -p 8080:8080 \
+  -e RANCHER_URL=https://your-rancher-server \
+  -e RANCHER_TOKEN=token-XXXXX:YYYYY \
+  rancher-mcp:latest \
+  --transport http --http-addr :8080
+```
+
+### Docker Compose Example
+```yaml
+version: '3.8'
+services:
+  rancher-mcp:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - RANCHER_URL=https://your-rancher-server
+      - RANCHER_TOKEN=token-XXXXX:YYYYY
+      - RANCHER_INSECURE_SKIP_VERIFY=false
+    command: ["--transport", "http", "--http-addr", ":8080"]
+```
+
 ## Development
 
 ### Build

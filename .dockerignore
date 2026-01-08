@@ -1,0 +1,47 @@
+# Binaries
+bin/
+dist/
+*.exe
+
+# Git
+.git/
+.gitignore
+
+# Environment files
+.env
+.env.local
+*.token
+secrets/
+
+# Test files
+*.test
+coverage.out
+coverage.html
+*_test.go
+
+# Documentation (optional - remove if you want docs in image)
+docs/
+*.md
+!README.md
+
+# CI/CD
+.github/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test scripts (optional - exclude from image but keep for reference)
+test_*.sh
+TEST_*.md
+
+# Build artifacts
+*.tar.gz
+*.zip
