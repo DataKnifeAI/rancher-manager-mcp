@@ -37,5 +37,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `.env` file support for secure credential management
 - SSL verification enabled by default
 
-[Unreleased]: https://github.com/surrealwolf/rancher-manager-mcp/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/surrealwolf/rancher-manager-mcp/releases/tag/v1.0.0
+[Unreleased]: https://github.com/DataKnifeAI/rancher-manager-mcp/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/DataKnifeAI/rancher-manager-mcp/releases/tag/v1.0.0

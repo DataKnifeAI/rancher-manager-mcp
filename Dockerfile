@@ -1,5 +1,6 @@
 # Build stage
-FROM golang:1.23-alpine AS builder
+# Pull from Harbor's DockerHub cache (first pull fetches from DockerHub, then caches)
+FROM harbor.dataknife.net/dockerhub/library/golang:1.23-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache git ca-certificates tzdata
@@ -23,7 +24,8 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflag
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags '-w -s' -o verify-token ./cmd/verify-token
 
 # Final stage
-FROM alpine:latest
+# Pull from Harbor's DockerHub cache
+FROM harbor.dataknife.net/dockerhub/library/alpine:latest
 
 # Install ca-certificates for HTTPS requests
 RUN apk --no-cache add ca-certificates tzdata

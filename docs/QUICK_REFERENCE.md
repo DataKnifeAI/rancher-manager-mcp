@@ -5,7 +5,7 @@ Quick reference for using the Rancher Manager MCP server.
 ## Installation
 
 ```bash
-git clone https://github.com/surrealwolf/rancher-manager-mcp.git
+git clone https://github.com/DataKnifeAI/rancher-manager-mcp.git
 cd rancher-manager-mcp
 go build -o bin/rancher-mcp ./cmd
 cp .env.example .env

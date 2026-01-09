@@ -20,7 +20,7 @@ Model Context Protocol (MCP) server for Rancher Manager API. Control and monitor
 
 ```bash
 # Clone the repository
-git clone https://github.com/surrealwolf/rancher-manager-mcp.git
+git clone https://github.com/DataKnifeAI/rancher-manager-mcp.git
 cd rancher-manager-mcp
 
 # Build the server

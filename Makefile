@@ -7,6 +7,9 @@ BIN_DIR=bin
 CMD_DIR=cmd
 DOCKER_IMAGE=rancher-mcp
 DOCKER_TAG=latest
+HARBOR_REGISTRY=harbor.dataknife.net
+HARBOR_PROJECT=library
+HARBOR_IMAGE=$(HARBOR_REGISTRY)/$(HARBOR_PROJECT)/$(DOCKER_IMAGE)
 GO_VERSION=1.23
 
 # Colors for output
@@ -89,8 +92,33 @@ clean: ## Clean build artifacts
 
 docker-build: ## Build Docker image
 	@echo "$(GREEN)Building Docker image...$(NC)"
-	@docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
+	@docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) -t $(HARBOR_IMAGE):$(DOCKER_TAG) .
 	@echo "$(GREEN)✓ Docker image built: $(DOCKER_IMAGE):$(DOCKER_TAG)$(NC)"
+	@echo "$(GREEN)✓ Docker image tagged: $(HARBOR_IMAGE):$(DOCKER_TAG)$(NC)"
+
+docker-login: ## Login to Harbor registry
+	@echo "$(GREEN)Logging into Harbor registry...$(NC)"
+	@if [ -z "$$HARBOR_USERNAME" ] || [ -z "$$HARBOR_PASSWORD" ]; then \
+		echo "$(YELLOW)⚠ Error: HARBOR_USERNAME and HARBOR_PASSWORD must be set$(NC)"; \
+		exit 1; \
+	fi
+	@docker login $(HARBOR_REGISTRY) -u "$$HARBOR_USERNAME" -p "$$HARBOR_PASSWORD"
+	@echo "$(GREEN)✓ Logged into $(HARBOR_REGISTRY)$(NC)"
+
+docker-pull: ## Pull Docker image from Harbor
+	@echo "$(GREEN)Pulling Docker image from Harbor...$(NC)"
+	@docker pull $(HARBOR_IMAGE):$(DOCKER_TAG) || echo "$(YELLOW)⚠ Image not found in registry$(NC)"
+	@echo "$(GREEN)✓ Pulled $(HARBOR_IMAGE):$(DOCKER_TAG)$(NC)"
+
+docker-push: ## Push Docker image to Harbor
+	@echo "$(GREEN)Pushing Docker image to Harbor...$(NC)"
+	@if [ -z "$$HARBOR_USERNAME" ] || [ -z "$$HARBOR_PASSWORD" ]; then \
+		echo "$(YELLOW)⚠ Error: HARBOR_USERNAME and HARBOR_PASSWORD must be set$(NC)"; \
+		exit 1; \
+	fi
+	@docker login $(HARBOR_REGISTRY) -u "$$HARBOR_USERNAME" -p "$$HARBOR_PASSWORD"
+	@docker push $(HARBOR_IMAGE):$(DOCKER_TAG)
+	@echo "$(GREEN)✓ Pushed $(HARBOR_IMAGE):$(DOCKER_TAG)$(NC)"
 
 docker-run: ## Run Docker container (stdio mode)
 	@echo "$(GREEN)Running Docker container (stdio mode)...$(NC)"

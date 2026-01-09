@@ -2,9 +2,10 @@ version: '3.8'
 
 services:
   rancher-mcp:
-    build: .
-    # Or use pre-built image:
-    # image: rancher-mcp:latest
+    # Build locally:
+    # build: .
+    # Or use pre-built image from Harbor:
+    image: harbor.dataknife.net/library/rancher-mcp:latest
     container_name: rancher-mcp
     ports:
       - "8080:8080"
