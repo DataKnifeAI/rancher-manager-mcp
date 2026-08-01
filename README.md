@@ -1,5 +1,8 @@
 # Rancher Manager MCP Server
 
+![Rancher Manager MCP server](docs/assets/rancher-manager-mcp-hero.jpg)
+
+
 Model Context Protocol (MCP) server for Rancher Manager API. Control and monitor your Rancher Kubernetes clusters through an AI-powered interface.
 
 ## Features
