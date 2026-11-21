@@ -1,0 +1,21 @@
+---
+description: rancher-manager-mcp project-specific agent guidance
+alwaysApply: true
+---
+
+# Rancher Manager MCP
+
+Go MCP server for Rancher Manager API (stdio + HTTP).
+
+Cursor uses `.cursor/rules/` (this file + org common). Legacy `.cursorrules` / Copilot instructions remain for other tools.
+
+## Key paths
+
+- `cmd/main.go` — entry point
+- `internal/server/` — tool registration and Rancher client
+- `internal/mcp/` — MCP protocol
+
+## Conventions
+
+- Tokens via env / `.env.example` only; never commit secrets
+- Rancher API: `/apis/management.cattle.io/v3/` with Bearer auth
